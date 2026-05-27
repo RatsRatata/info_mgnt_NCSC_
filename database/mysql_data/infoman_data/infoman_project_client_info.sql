@@ -47,16 +47,6 @@ CREATE TABLE `client_info` (
   `highest_educational_attainment` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `client_info`
---
-
-LOCK TABLES `client_info` WRITE;
-/*!40000 ALTER TABLE `client_info` DISABLE KEYS */;
-INSERT INTO `client_info` VALUES ('0-0-001-1234-ABC','Alan Walker','Bulacan, Central Luzon','1960-07-14','Nueva Ecija','M','M','91111111','alanwalker67@gmail.com','Catholic','Filipino','Tagalog','103','104','105','106','','','N','Tailor','DSWD','College Level'),('0-0-002-6767-VAC','Ada Lovelace','Antipolo, Calabarzon','1946-11-11','Quezon City, Metro Manila','M','F','464176572','firstprogrammerlmao@yahoo.com','N/A','Filipino','Tagalog','6721','67211','67212','67213','6721','67215','Y','Programmer','DWSD','Post Graduate'),('0-0-003-4321-ADW','Lebron James','Tondo, Manila','1950-06-07','Tondo, Manila','W','M','91234590','pogi123@gmail.com','Catholic','FIlipino','Tagalog','','','','888','999','','Y','Unemployed','DSWD','Vocational');
-/*!40000 ALTER TABLE `client_info` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -67,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-27 14:01:58
+-- Dump completed on 2026-05-27 15:57:17

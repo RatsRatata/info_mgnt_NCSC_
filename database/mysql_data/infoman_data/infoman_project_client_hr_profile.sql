@@ -23,22 +23,13 @@ DROP TABLE IF EXISTS `client_hr_profile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client_hr_profile` (
-  `reference_code` varchar(30) DEFAULT NULL,
-  `skill_id` int DEFAULT NULL,
+  `skill_id` int NOT NULL AUTO_INCREMENT,
+  `reference_code` varchar(30) NOT NULL,
   `technical_skills` varchar(15) DEFAULT NULL,
-  `community_service` varchar(40) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `community_service` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`skill_id`,`reference_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `client_hr_profile`
---
-
-LOCK TABLES `client_hr_profile` WRITE;
-/*!40000 ALTER TABLE `client_hr_profile` DISABLE KEYS */;
-INSERT INTO `client_hr_profile` VALUES ('0-0-001-1234-ABC',1,'Tailor','Religious'),('0-0-002-6767-VAC',1,'Teaching','Community / Organization Leader'),('0-0-003-4321-ADW',1,'Sports Coach','Friendly Visits'),('0-0-004-1789-LLM',1,'Evangelization','Friendly Visits');
-/*!40000 ALTER TABLE `client_hr_profile` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -49,4 +40,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-27 14:01:58
+-- Dump completed on 2026-05-27 15:57:17

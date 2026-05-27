@@ -23,26 +23,17 @@ DROP TABLE IF EXISTS `client_relationship`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client_relationship` (
-  `reference_code` varchar(30) DEFAULT NULL,
-  `relative_id` int DEFAULT NULL,
+  `relative_id` int NOT NULL AUTO_INCREMENT,
+  `reference_code` varchar(30) NOT NULL,
   `relative_name` varchar(40) DEFAULT NULL,
   `relationship` varchar(15) DEFAULT NULL,
   `relative_age` int DEFAULT NULL,
   `working_status` char(3) DEFAULT NULL,
   `occupation` varchar(30) DEFAULT NULL,
-  `income` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `income` bigint DEFAULT NULL,
+  PRIMARY KEY (`relative_id`,`reference_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `client_relationship`
---
-
-LOCK TABLES `client_relationship` WRITE;
-/*!40000 ALTER TABLE `client_relationship` DISABLE KEYS */;
-INSERT INTO `client_relationship` VALUES ('0-0-001-1234-ABC',1,'Vivi Niemi','Spouse',80,'Yes','Tailor',10000),('0-0-002-6767-VAC',1,'William King-Noel','Spouse',85,'Yes','Chemical Engineer',100000);
-/*!40000 ALTER TABLE `client_relationship` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -53,4 +44,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-27 14:01:58
+-- Dump completed on 2026-05-27 15:57:16
