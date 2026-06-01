@@ -6,8 +6,8 @@ public class ClientInfo {
     private String address;
     private java.sql.Date birthDate;
     private String birthPlace;
-    private char maritalStatus;
-    private char sex;
+    private String maritalStatus;
+    private String sex;
     private String contactNumber;
     private String emailAddress;
     private String religion;
@@ -19,10 +19,11 @@ public class ClientInfo {
     private String philhealthNum;
     private String scAssociationId;
     private String otherGovId;
-    private char travelCapability;
+    private String travelCapability;
     private String job;
     private String currentPension;
     private String highestEducationalAttainment;
+    
 	public String getReferenceCode() {
 		return referenceCode;
 	}
@@ -53,16 +54,16 @@ public class ClientInfo {
 	public void setBirthPlace(String birthPlace) {
 		this.birthPlace = birthPlace;
 	}
-	public char getMaritalStatus() {
+	public String getMaritalStatus() {
 		return maritalStatus;
 	}
-	public void setMaritalStatus(char maritalStatus) {
+	public void setMaritalStatus(String maritalStatus) {
 		this.maritalStatus = maritalStatus;
 	}
-	public char getSex() {
+	public String getSex() {
 		return sex;
 	}
-	public void setSex(char sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 	public String getContactNumber() {
@@ -131,10 +132,10 @@ public class ClientInfo {
 	public void setOtherGovId(String otherGovId) {
 		this.otherGovId = otherGovId;
 	}
-	public char getTravelCapability() {
+	public String getTravelCapability() {
 		return travelCapability;
 	}
-	public void setTravelCapability(char travelCapability) {
+	public void setTravelCapability(String travelCapability) {
 		this.travelCapability = travelCapability;
 	}
 	public String getJob() {
