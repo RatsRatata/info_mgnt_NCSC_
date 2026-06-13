@@ -69,7 +69,68 @@ public class ClientInfoDAO {
 	        stmt.setString(index++, client.getReferenceCode());
 	    }
 	}
+
+	// --- AUTO-GENERATORS ---
 	
+	private String generateNextReferenceCode() {
+		int currentYear = java.time.Year.now().getValue();
+		String prefix = "REF-" + currentYear + "-";
+		String nextCode = prefix + "001"; 
+		
+		String sql = "SELECT reference_code FROM client_info WHERE reference_code LIKE ? ORDER BY reference_code DESC LIMIT 1";
+		
+		try (Connection conn = DBConnection.connect();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setString(1, prefix + "%"); 
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					String lastCode = rs.getString("reference_code");
+					String[] parts = lastCode.split("-");
+					int lastNumber = Integer.parseInt(parts[2]);
+					nextCode = prefix + String.format("%03d", lastNumber + 1);
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Failed to generate reference code: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return nextCode;
+	}
+
+	private String generateNextOscaId() {
+		String prefix = "OSCA-";
+		String nextCode = prefix + "001"; 
+		
+		String sql = "SELECT osca_id_num FROM client_info WHERE osca_id_num LIKE ? ORDER BY osca_id_num DESC LIMIT 1";
+		
+		try (Connection conn = DBConnection.connect();
+			 PreparedStatement stmt = conn.prepareStatement(sql)) {
+			
+			stmt.setString(1, prefix + "%"); 
+			
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					String lastCode = rs.getString("osca_id_num");
+					if (lastCode != null && lastCode.contains("-")) {
+						String[] parts = lastCode.split("-");
+						if (parts.length == 2) {
+							int lastNumber = Integer.parseInt(parts[1]);
+							nextCode = prefix + String.format("%03d", lastNumber + 1);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("Failed to generate OSCA ID: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return nextCode;
+	}
+	
+	// --- MAIN CRUD METHODS ---
+
 	// Get all Client's Info
 	public List<ClientInfo> getAll() {
 	    List<ClientInfo> list = new ArrayList<>();
@@ -101,6 +162,10 @@ public class ClientInfoDAO {
 	}
 	
 	public boolean insert(ClientInfo client) {
+		// 1. GENERATE THE IDs BEFORE SAVING
+		client.setReferenceCode(generateNextReferenceCode());
+		client.setOscaIdNum(generateNextOscaId());
+
 	    String sql = "INSERT INTO client_info (reference_code, name, address, birth_date, birth_place, "
 	               + "marital_status, sex, contact_number, email_address, religion, ethnicity, "
 	               + "language_spoken, osca_id_num, gsis_sss_number, tin_num, philhealth_num, "
@@ -160,6 +225,4 @@ public class ClientInfoDAO {
 	        return false;
 	    }
 	}
-	
-	
 }

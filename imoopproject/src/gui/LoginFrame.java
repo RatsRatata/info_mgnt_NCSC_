@@ -28,10 +28,11 @@ public class LoginFrame extends JFrame {
 	 */
 	public LoginFrame(JFrame parentMenu) {
 		this.parentMenu = parentMenu;
-		
+			
 		setTitle("Admin Verification");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Only closes this small window
 		setBounds(100, 100, 350, 250);
+		setResizable(false);
 		setLocationRelativeTo(parentMenu); // Centers the popup directly over the main menu
 		
 		contentPane = new JPanel();

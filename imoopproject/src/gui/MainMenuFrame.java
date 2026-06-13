@@ -23,7 +23,8 @@ public class MainMenuFrame extends JFrame {
 		setTitle("NCSC - Public Portal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Shuts down app if closed
 		setBounds(100, 100, 500, 350);
-		setLocationRelativeTo(null); 
+		setLocationRelativeTo(null);
+		setResizable(false);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,10 +60,13 @@ public class MainMenuFrame extends JFrame {
 		// --- CENTER BUTTONS ---
 		JButton btnRegister = new JButton("Register / New Application");
 		btnRegister.addActionListener(new ActionListener() {
+		
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Registration Form coming soon!");
+				RegistrationFrame regFrame = new RegistrationFrame();
+				regFrame.setVisible(true);
 			}
 		});
+		
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBounds(100, 140, 280, 40);
 		contentPane.add(btnRegister);
