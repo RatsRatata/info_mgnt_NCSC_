@@ -1,31 +1,31 @@
 package main;
 
-import dao.ClientInfoDAO;
+import gui.MainMenuFrame;
 import dao.DBConnection;
-import model.ClientInfo;
+import java.awt.EventQueue;
 import java.sql.Connection;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         
+        // Test the database connection first
         Connection conn = DBConnection.connect();
         if (conn != null) {
-            System.out.println("Connection successful!");
+            System.out.println("aye gng it's running good job");
         } else {
-            System.out.println("Connection failed!");
+            System.out.println("hey gng database is dead did you do sudo systemctl enable --now mysql??? DO IT NOW");
         }
         
-    	ClientInfoDAO dao = new ClientInfoDAO();
-        List<ClientInfo> clients = dao.getAll();
-        
-        if (clients.isEmpty()) {
-            System.out.println("No clients found.");
-        } else {
-            for (ClientInfo client : clients) {
-                System.out.println(client.getReferenceCode() + " - " + client.getName());
+        // Launch the Main Menu
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+             try {
+                    MainMenuFrame frame = new MainMenuFrame();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        });
     }
-    
 }
