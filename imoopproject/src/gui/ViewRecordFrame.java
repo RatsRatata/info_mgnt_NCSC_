@@ -29,90 +29,65 @@ public class ViewRecordFrame extends JFrame {
 		setLocationRelativeTo(null); 
 		setResizable(false);
 
-		contentPane = new JPanel();
+		contentPane = new JPanel(new BorderLayout(0, 0));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-		// Main Client Info
+		// --- 1. Main Client Info (Cleaned up with a 2D Array) ---
 		ClientInfo client = new ClientInfoDAO().getByReferenceCode(refCode);
-		
 		String[] infoColumns = {"Field", "Data"};
-		DefaultTableModel infoModel = new DefaultTableModel(infoColumns, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) { return false; } // Read-only
-		};
 		
+		Object[][] infoData = new Object[0][0];
 		if (client != null) {
-			infoModel.addRow(new Object[]{"Reference Code", client.getReferenceCode()});
-			infoModel.addRow(new Object[]{"Name", client.getName()});
-			infoModel.addRow(new Object[]{"Address", client.getAddress()});
-			infoModel.addRow(new Object[]{"Birth Date", client.getBirthDate()});
-			infoModel.addRow(new Object[]{"Birth Place", client.getBirthPlace()});
-			infoModel.addRow(new Object[]{"Marital Status", client.getMaritalStatus()});
-			infoModel.addRow(new Object[]{"Sex", client.getSex()});
-			infoModel.addRow(new Object[]{"Contact Number", client.getContactNumber()});
-			infoModel.addRow(new Object[]{"Email", client.getEmailAddress()});
-			infoModel.addRow(new Object[]{"Religion", client.getReligion()});
-			infoModel.addRow(new Object[]{"Ethnicity", client.getEthnicity()});
-			infoModel.addRow(new Object[]{"Language Spoken", client.getLanguageSpoken()});
-			infoModel.addRow(new Object[]{"OSCA ID", client.getOscaIdNum()});
-			infoModel.addRow(new Object[]{"GSIS/SSS Number", client.getGsisSssNumber()});
-			infoModel.addRow(new Object[]{"TIN Number", client.getTinNum()});
-			infoModel.addRow(new Object[]{"PhilHealth Number", client.getPhilhealthNum()});
-			infoModel.addRow(new Object[]{"SC Association ID", client.getScAssociationId()});
-			infoModel.addRow(new Object[]{"Other Gov ID", client.getOtherGovId()});
-			infoModel.addRow(new Object[]{"Travel Capability", client.getTravelCapability()});
-			infoModel.addRow(new Object[]{"Education", client.getHighestEducationalAttainment()});
-			infoModel.addRow(new Object[]{"Job", client.getJob()});
-			infoModel.addRow(new Object[]{"Current Pension", client.getCurrentPension()});
+			infoData = new Object[][] {
+				{"Reference Code", client.getReferenceCode()}, {"Name", client.getName()},
+				{"Address", client.getAddress()}, {"Birth Date", client.getBirthDate()},
+				{"Birth Place", client.getBirthPlace()}, {"Marital Status", client.getMaritalStatus()},
+				{"Sex", client.getSex()}, {"Contact Number", client.getContactNumber()},
+				{"Email", client.getEmailAddress()}, {"Religion", client.getReligion()},
+				{"Ethnicity", client.getEthnicity()}, {"Language Spoken", client.getLanguageSpoken()},
+				{"OSCA ID", client.getOscaIdNum()}, {"GSIS/SSS Number", client.getGsisSssNumber()},
+				{"TIN Number", client.getTinNum()}, {"PhilHealth Number", client.getPhilhealthNum()},
+				{"SC Association ID", client.getScAssociationId()}, {"Other Gov ID", client.getOtherGovId()},
+				{"Travel Capability", client.getTravelCapability()}, {"Education", client.getHighestEducationalAttainment()},
+				{"Job", client.getJob()}, {"Current Pension", client.getCurrentPension()}
+			};
 		}
+		
+		DefaultTableModel infoModel = new DefaultTableModel(infoData, infoColumns) {
+			@Override public boolean isCellEditable(int row, int column) { return false; } 
+		};
 		
 		JTable infoTable = new JTable(infoModel);
 		gui.UIUtils.applyModernTableStyle(infoTable);
-		
 		infoTable.getColumnModel().getColumn(0).setPreferredWidth(150);
 		infoTable.getColumnModel().getColumn(0).setMaxWidth(200);
 		infoTable.getColumnModel().getColumn(1).setPreferredWidth(550);
-		
-		tabbedPane.addTab("Personal Details", null, new JScrollPane(infoTable), null);
+		tabbedPane.addTab("Personal Details", new JScrollPane(infoTable));
 
-		// HR Profile
+		// --- 2. HR Profile ---
 		List<ClientHrProfile> profiles = new ClientHrProfileDAO().getByReferenceCode(refCode);
-		String[] hrColumns = {"Technical Skills", "Community Service"};
-		DefaultTableModel hrModel = new DefaultTableModel(hrColumns, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) { return false; } 
+		DefaultTableModel hrModel = new DefaultTableModel(new String[]{"Technical Skills", "Community Service"}, 0) {
+			@Override public boolean isCellEditable(int row, int column) { return false; } 
 		};
-		
-		for (ClientHrProfile profile : profiles) {
-			hrModel.addRow(new Object[]{profile.getTechnicalSkills(), profile.getCommunityService()});
-		}
+		for (ClientHrProfile p : profiles) hrModel.addRow(new Object[]{p.getTechnicalSkills(), p.getCommunityService()});
 		
 		JTable hrTable = new JTable(hrModel);
 		gui.UIUtils.applyModernTableStyle(hrTable);
-		
-		tabbedPane.addTab("HR Profile", null, new JScrollPane(hrTable), null);
+		tabbedPane.addTab("HR Profile", new JScrollPane(hrTable));
 
-		// Relationships
+		// --- 3. Relationships ---
 		List<ClientRelationship> relatives = new ClientRelationshipDAO().getByReferenceCode(refCode);
-		String[] relColumns = {"Name", "Relationship", "Age", "Working Status", "Occupation", "Income"};
-		DefaultTableModel relModel = new DefaultTableModel(relColumns, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) { return false; }
+		DefaultTableModel relModel = new DefaultTableModel(new String[]{"Name", "Relationship", "Age", "Working Status", "Occupation", "Income"}, 0) {
+			@Override public boolean isCellEditable(int row, int column) { return false; }
 		};
-		
-		for (ClientRelationship rel : relatives) {
-			relModel.addRow(new Object[]{rel.getRelativeName(), rel.getRelationship(), rel.getRelativeAge(), 
-										 rel.getWorkingStatus(), rel.getOccupation(), rel.getIncome()});
-		}
+		for (ClientRelationship r : relatives) relModel.addRow(new Object[]{r.getRelativeName(), r.getRelationship(), r.getRelativeAge(), r.getWorkingStatus(), r.getOccupation(), r.getIncome()});
 		
 		JTable relTable = new JTable(relModel);
 		gui.UIUtils.applyModernTableStyle(relTable);
-		
-		tabbedPane.addTab("Relationships", null, new JScrollPane(relTable), null);
+		tabbedPane.addTab("Relationships", new JScrollPane(relTable));
 	}
 }

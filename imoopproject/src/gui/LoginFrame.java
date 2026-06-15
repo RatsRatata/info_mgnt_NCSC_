@@ -3,8 +3,6 @@ package gui;
 import dao.AdminDAO;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,27 +19,22 @@ public class LoginFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
-	private JFrame parentMenu; // Stores the Main Menu so we can close it later
+	private JFrame parentMenu; 
 
-	/**
-	 * Constructor accepts the parent frame so it can be closed upon successful login.
-	 */
 	public LoginFrame(JFrame parentMenu) {
 		this.parentMenu = parentMenu;
 			
 		setTitle("Admin Verification");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Only closes this small window
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
 		setBounds(100, 100, 350, 250);
 		setResizable(false);
-		setLocationRelativeTo(parentMenu); // Centers the popup directly over the main menu
+		setLocationRelativeTo(parentMenu); 
 		
-		contentPane = new JPanel();
+		contentPane = new JPanel(null);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
-		JLabel lblTitle = new JLabel("Authorized Personnel Only");
-		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel lblTitle = new JLabel("Authorized Personnel Only", SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblTitle.setBounds(10, 20, 314, 20);
 		contentPane.add(lblTitle);
@@ -53,7 +46,6 @@ public class LoginFrame extends JFrame {
 		usernameField = new JTextField();
 		usernameField.setBounds(120, 67, 160, 20);
 		contentPane.add(usernameField);
-		usernameField.setColumns(10);
 		
 		JLabel lblPassword = new JLabel("Password:");
 		lblPassword.setBounds(40, 110, 80, 14);
@@ -64,31 +56,19 @@ public class LoginFrame extends JFrame {
 		contentPane.add(passwordField);
 		
 		JButton btnLogin = new JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String user = usernameField.getText();
-				String pass = new String(passwordField.getPassword());
-				
-				AdminDAO adminDao = new AdminDAO();
-				
-				if(adminDao.validateLogin(user, pass)) {
-					// 1. Open the main dashboard
-					DatabaseManagementFrame dbWindow = new DatabaseManagementFrame();
-					dbWindow.setVisible(true);
-					
-					// 2. Close this login window
-					dispose(); 
-					
-					// 3. Close the public main menu
-					if (parentMenu != null) {
-						parentMenu.dispose(); 
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Invalid Credentials", "Login Error", JOptionPane.ERROR_MESSAGE);
-				}
+		btnLogin.setBounds(120, 150, 160, 30);
+		btnLogin.addActionListener(e -> {
+			String user = usernameField.getText();
+			String pass = new String(passwordField.getPassword());
+			
+			if (new AdminDAO().validateLogin(user, pass)) {
+				new DatabaseManagementFrame().setVisible(true);
+				dispose(); 
+				if (parentMenu != null) parentMenu.dispose(); 
+			} else {
+				JOptionPane.showMessageDialog(null, "Invalid Credentials", "Login Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		btnLogin.setBounds(120, 150, 160, 30);
 		contentPane.add(btnLogin);
 	}
 }

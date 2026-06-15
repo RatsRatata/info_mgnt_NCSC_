@@ -1,12 +1,17 @@
 package gui;
 
 import dao.ClientInfoDAO;
+import dao.ClientHrProfileDAO;
+import dao.ClientRelationshipDAO;
 import model.ClientInfo;
+import model.ClientHrProfile;
+import model.ClientRelationship;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Calendar;
+import java.util.List;
 
 public class RegistrationFrame extends JFrame {
 
@@ -15,17 +20,14 @@ public class RegistrationFrame extends JFrame {
 	private boolean isEditMode = false;
 	private String currentRefCode = null;
 	
-	// Main Info Fields
 	private JTextField txtName, txtAddress, txtBirthDate, txtBirthPlace;
 	private JComboBox<String> cbMaritalStatus, cbSex, cbTravelCapability;
 	private JTextField txtContact, txtEmail, txtReligion, txtEthnicity, txtLanguage;
 	private JTextField txtGsis, txtTin, txtPhilHealth, txtScAssoc, txtOtherGov;
 	private JTextField txtJob, txtPension, txtEducation;
 	
-	// HR Profile Fields
 	private JTextField txtTechSkills, txtCommunityService;
 	
-	// Relative Inputs & Table
 	private JTextField txtRelName, txtRelAge, txtRelRelationship, txtRelOccupation, txtRelIncome;
 	private JComboBox<String> cbRelWorking;
 	private DefaultTableModel relTableModel;
@@ -49,7 +51,6 @@ public class RegistrationFrame extends JFrame {
 
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		// WIDENED THE FRAME TO 900px
 		setSize(900, 800);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -57,15 +58,12 @@ public class RegistrationFrame extends JFrame {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		setContentPane(mainPanel);
 
-		// Container to hold all our separate sections, stacking them vertically
 		JPanel contentContainer = new JPanel();
 		contentContainer.setLayout(new BoxLayout(contentContainer, BoxLayout.Y_AXIS));
 		contentContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		// ==========================================
-		// SECTION 1: PERSONAL INFORMATION
-		// ==========================================
-		JPanel personalPanel = new JPanel(new GridLayout(10, 4, 10, 10)); // 4 columns now!
+		// --- SECTION 1: PERSONAL INFORMATION ---
+		JPanel personalPanel = new JPanel(new GridLayout(10, 4, 10, 10)); 
 		personalPanel.setBorder(BorderFactory.createTitledBorder("Personal Information"));
 
 		personalPanel.add(new JLabel("* Full Name:")); txtName = new JTextField(); personalPanel.add(txtName);
@@ -90,26 +88,21 @@ public class RegistrationFrame extends JFrame {
 		personalPanel.add(new JLabel("Current Pension:")); txtPension = new JTextField(); personalPanel.add(txtPension);
 
 		contentContainer.add(personalPanel);
-		contentContainer.add(Box.createRigidArea(new Dimension(0, 10))); // Spacing
+		contentContainer.add(Box.createRigidArea(new Dimension(0, 10))); 
 
-		// ==========================================
-		// SECTION 2: HR PROFILE
-		// ==========================================
+		// --- SECTION 2: HR PROFILE ---
 		JPanel hrPanel = new JPanel(new GridLayout(1, 4, 10, 10));
 		hrPanel.setBorder(BorderFactory.createTitledBorder("HR Profile"));
 		hrPanel.add(new JLabel("Technical Skills:")); txtTechSkills = new JTextField(); hrPanel.add(txtTechSkills);
 		hrPanel.add(new JLabel("Community Service:")); txtCommunityService = new JTextField(); hrPanel.add(txtCommunityService);
 		
 		contentContainer.add(hrPanel);
-		contentContainer.add(Box.createRigidArea(new Dimension(0, 10))); // Spacing
+		contentContainer.add(Box.createRigidArea(new Dimension(0, 10))); 
 
-		// ==========================================
-		// SECTION 3: DYNAMIC RELATIVES
-		// ==========================================
+		// --- SECTION 3: RELATIVES ---
 		JPanel relativesPanel = new JPanel(new BorderLayout(5, 5));
 		relativesPanel.setBorder(BorderFactory.createTitledBorder("Family & Relatives"));
 		
-		// 3A. The Inputs
 		JPanel relInputPanel = new JPanel(new GridLayout(2, 6, 5, 5));
 		relInputPanel.add(new JLabel("Name:")); txtRelName = new JTextField(); relInputPanel.add(txtRelName);
 		relInputPanel.add(new JLabel("Relationship:")); txtRelRelationship = new JTextField(); relInputPanel.add(txtRelRelationship);
@@ -119,18 +112,16 @@ public class RegistrationFrame extends JFrame {
 		relInputPanel.add(new JLabel("Income:")); txtRelIncome = new JTextField(); relInputPanel.add(txtRelIncome);
 		
 		JButton btnAddRelative = new JButton("Add Relative to List");
-		
 		JPanel topRelPanel = new JPanel(new BorderLayout());
 		topRelPanel.add(relInputPanel, BorderLayout.CENTER);
 		topRelPanel.add(btnAddRelative, BorderLayout.SOUTH);
 		relativesPanel.add(topRelPanel, BorderLayout.NORTH);
 		
-		// 3B. The Table
 		String[] relColumns = {"Name", "Relationship", "Age", "Working", "Occupation", "Income"};
 		relTableModel = new DefaultTableModel(relColumns, 0);
 		relTable = new JTable(relTableModel);
 		JScrollPane tableScroll = new JScrollPane(relTable);
-		tableScroll.setPreferredSize(new Dimension(800, 120)); // Keep it small
+		tableScroll.setPreferredSize(new Dimension(800, 120)); 
 		relativesPanel.add(tableScroll, BorderLayout.CENTER);
 		
 		JButton btnRemoveRelative = new JButton("Remove Selected Row");
@@ -138,15 +129,12 @@ public class RegistrationFrame extends JFrame {
 
 		contentContainer.add(relativesPanel);
 
-		// Wrap the whole container in a Scroll Pane
 		JScrollPane mainScroll = new JScrollPane(contentContainer);
 		mainScroll.getVerticalScrollBar().setUnitIncrement(16);
 		mainScroll.setBorder(null);
 		mainPanel.add(mainScroll, BorderLayout.CENTER);
 
-		// ==========================================
-		// BOTTOM CONTROL PANEL
-		// ==========================================
+		// --- BOTTOM BUTTONS ---
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
 		JButton btnCancel = new JButton("Cancel");
 		btnSave = new JButton("Save Record");
@@ -154,29 +142,22 @@ public class RegistrationFrame extends JFrame {
 		buttonPanel.add(btnSave);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		// --- BUTTON ACTIONS ---
 		btnCancel.addActionListener(e -> dispose()); 
 		
-		// Dynamic Table Action: ADD
 		btnAddRelative.addActionListener(e -> {
 			if(txtRelName.getText().trim().isEmpty() || txtRelRelationship.getText().trim().isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Relative Name and Relationship are required!");
 				return;
 			}
 			relTableModel.addRow(new Object[]{
-				txtRelName.getText().trim(),
-				txtRelRelationship.getText().trim(),
-				txtRelAge.getText().trim(),
-				cbRelWorking.getSelectedItem(),
-				txtRelOccupation.getText().trim(),
-				txtRelIncome.getText().trim()
+				txtRelName.getText().trim(), txtRelRelationship.getText().trim(),
+				txtRelAge.getText().trim(), cbRelWorking.getSelectedItem(),
+				txtRelOccupation.getText().trim(), txtRelIncome.getText().trim()
 			});
-			// Clear boxes after adding
 			txtRelName.setText(""); txtRelRelationship.setText(""); txtRelAge.setText(""); 
 			txtRelOccupation.setText(""); txtRelIncome.setText("");
 		});
 		
-		// Dynamic Table Action: REMOVE
 		btnRemoveRelative.addActionListener(e -> {
 			int selectedRow = relTable.getSelectedRow();
 			if(selectedRow != -1) relTableModel.removeRow(selectedRow);
@@ -215,13 +196,26 @@ public class RegistrationFrame extends JFrame {
 			txtJob.setText(client.getJob() == null ? "" : client.getJob());
 			txtPension.setText(client.getCurrentPension() == null ? "0" : client.getCurrentPension());
 			
-			// Note: If you want to load existing HR Profiles and Relatives into the table, 
-			// you will need to fetch them from the database using their DAOs here!
+			List<ClientHrProfile> hrList = new ClientHrProfileDAO().getByReferenceCode(currentRefCode);
+			if (hrList != null && !hrList.isEmpty()) {
+				ClientHrProfile hr = hrList.get(0); 
+				txtTechSkills.setText(hr.getTechnicalSkills() == null ? "" : hr.getTechnicalSkills());
+				txtCommunityService.setText(hr.getCommunityService() == null ? "" : hr.getCommunityService());
+			}
+			
+			List<ClientRelationship> relList = new ClientRelationshipDAO().getByReferenceCode(currentRefCode);
+			if (relList != null) {
+				for (ClientRelationship rel : relList) {
+					relTableModel.addRow(new Object[]{
+						rel.getRelativeName(), rel.getRelationship(), String.valueOf(rel.getRelativeAge()),
+						rel.getWorkingStatus().equals("Y") ? "Yes" : "No", rel.getOccupation(), String.valueOf(rel.getIncome())
+					});
+				}
+			}
 		}
 	}
 
 	private void saveClientRecord() {
-		// 1. STRICT NOT NULL VALIDATION
 		if (txtName.getText().trim().isEmpty() || txtAddress.getText().trim().isEmpty() || 
 			txtBirthDate.getText().trim().isEmpty() || txtBirthPlace.getText().trim().isEmpty() || 
 			txtEthnicity.getText().trim().isEmpty() || txtLanguage.getText().trim().isEmpty() || 
@@ -245,7 +239,6 @@ public class RegistrationFrame extends JFrame {
 			newClient.setName(txtName.getText().trim());
 			newClient.setAddress(txtAddress.getText().trim());
 			
-			// Date Validation
 			java.sql.Date dob = java.sql.Date.valueOf(txtBirthDate.getText().trim());
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(dob);
@@ -262,55 +255,64 @@ public class RegistrationFrame extends JFrame {
 			String travelFull = (String) cbTravelCapability.getSelectedItem();
 			newClient.setTravelCapability(travelFull.substring(0, 1)); 
 
-			newClient.setContactNumber(txtContact.getText().trim().isEmpty() ? null : txtContact.getText().trim());
-			newClient.setEmailAddress(txtEmail.getText().trim().isEmpty() ? null : txtEmail.getText().trim());
-			newClient.setReligion(txtReligion.getText().trim().isEmpty() ? null : txtReligion.getText().trim());
+			// --- CLEANED UP MAPPING USING HELPER METHOD ---
+			newClient.setContactNumber(getVal(txtContact));
+			newClient.setEmailAddress(getVal(txtEmail));
+			newClient.setReligion(getVal(txtReligion));
 			newClient.setEthnicity(txtEthnicity.getText().trim());
 			newClient.setLanguageSpoken(txtLanguage.getText().trim());
-			newClient.setGsisSssNumber(txtGsis.getText().trim().isEmpty() ? null : txtGsis.getText().trim());
-			newClient.setTinNum(txtTin.getText().trim().isEmpty() ? null : txtTin.getText().trim());
-			newClient.setPhilhealthNum(txtPhilHealth.getText().trim().isEmpty() ? null : txtPhilHealth.getText().trim());
+			newClient.setGsisSssNumber(getVal(txtGsis));
+			newClient.setTinNum(getVal(txtTin));
+			newClient.setPhilhealthNum(getVal(txtPhilHealth));
 			newClient.setScAssociationId(txtScAssoc.getText().trim());
-			newClient.setOtherGovId(txtOtherGov.getText().trim().isEmpty() ? null : txtOtherGov.getText().trim());
-			newClient.setJob(txtJob.getText().trim().isEmpty() ? null : txtJob.getText().trim());
+			newClient.setOtherGovId(getVal(txtOtherGov));
+			newClient.setJob(getVal(txtJob));
 			newClient.setHighestEducationalAttainment(txtEducation.getText().trim());
 
 			String pensionText = txtPension.getText().trim();
 			newClient.setCurrentPension(pensionText.isEmpty() ? "0" : pensionText);
 
-			// --- SAVE LOGIC ---
-			boolean success;
-			if (isEditMode) {
-				success = dao.update(newClient);
-			} else {
-				success = dao.insert(newClient);
-			}
+			boolean success = isEditMode ? dao.update(newClient) : dao.insert(newClient);
 
 			if (success) {
-				// HOW TO GET YOUR RELATIVES DATA OUT OF THE TABLE TO SAVE IT:
-				// Because your insert() method mutates newClient, we now have the generated Ref Code!
 				String savedRefCode = newClient.getReferenceCode();
+				ClientHrProfileDAO hrDao = new ClientHrProfileDAO();
+				ClientRelationshipDAO relDao = new ClientRelationshipDAO();
 				
-				// System.out.println("Ready to save HR Profile for: " + savedRefCode);
-				// String skills = txtTechSkills.getText().trim();
-				// String service = txtCommunityService.getText().trim();
-				// --> CALL HR DAO HERE
+				if (isEditMode) {
+					hrDao.deleteByReferenceCode(savedRefCode);
+					relDao.deleteByReferenceCode(savedRefCode);
+				}
 				
-				// Loop through the table to get infinite relatives!
+				String skills = txtTechSkills.getText().trim();
+				String service = txtCommunityService.getText().trim();
+				if (!skills.isEmpty() || !service.isEmpty()) {
+					ClientHrProfile hrProfile = new ClientHrProfile();
+					hrProfile.setReferenceCode(savedRefCode);
+					hrProfile.setTechnicalSkills(skills);
+					hrProfile.setCommunityService(service);
+					hrDao.insert(hrProfile);
+				}
+				
 				for (int i = 0; i < relTableModel.getRowCount(); i++) {
-					String rName = relTableModel.getValueAt(i, 0).toString();
-					String rRel = relTableModel.getValueAt(i, 1).toString();
-					String rAge = relTableModel.getValueAt(i, 2).toString();
-					String rWork = relTableModel.getValueAt(i, 3).toString().substring(0, 1); // Get Y/N
-					String rOcc = relTableModel.getValueAt(i, 4).toString();
-					String rInc = relTableModel.getValueAt(i, 5).toString();
+					ClientRelationship relative = new ClientRelationship();
+					relative.setReferenceCode(savedRefCode);
+					relative.setRelativeName(relTableModel.getValueAt(i, 0).toString());
+					relative.setRelationship(relTableModel.getValueAt(i, 1).toString());
 					
-					// System.out.println("Ready to save Relative: " + rName + " for " + savedRefCode);
-					// --> CALL RELATIONSHIP DAO HERE
+					try { relative.setRelativeAge(Integer.parseInt(relTableModel.getValueAt(i, 2).toString())); } 
+					catch (NumberFormatException e) { relative.setRelativeAge(0); }
+					
+					relative.setWorkingStatus(relTableModel.getValueAt(i, 3).toString().substring(0, 1)); 
+					relative.setOccupation(relTableModel.getValueAt(i, 4).toString());
+					
+					try { relative.setIncome(Long.parseLong(relTableModel.getValueAt(i, 5).toString())); } 
+					catch (NumberFormatException e) { relative.setIncome(0L); }
+					
+					relDao.insert(relative);
 				}
 
-				String msg = isEditMode ? "Record successfully updated!" : "New client successfully registered!";
-				JOptionPane.showMessageDialog(this, msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(this, isEditMode ? "Record updated!" : "New client registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
 				dispose(); 
 			} else {
 				JOptionPane.showMessageDialog(this, "Failed to save to database.", "Database Error", JOptionPane.ERROR_MESSAGE);
@@ -322,5 +324,11 @@ public class RegistrationFrame extends JFrame {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(this, "An unexpected error occurred.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+	
+	// --- HELPER METHOD TO KEEP CODE CLEAN ---
+	private String getVal(JTextField field) {
+		String text = field.getText().trim();
+		return text.isEmpty() ? null : text;
 	}
 }

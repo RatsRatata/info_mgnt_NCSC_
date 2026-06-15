@@ -10,11 +10,7 @@ public class DBConnection {
     private static final String PASSWORD = "infomanproject123";
 
     public static Connection connect() {
-        try {
-            return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+        try { return DriverManager.getConnection(URL, USER, PASSWORD); } 
+        catch (SQLException e) { e.printStackTrace(); return null; }
     }
 }
