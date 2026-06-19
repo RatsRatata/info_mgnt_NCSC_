@@ -58,7 +58,8 @@ public class ViewRecordFrame extends JFrame {
 		}
 		
 		DefaultTableModel infoModel = new DefaultTableModel(infoData, infoColumns) {
-			@Override public boolean isCellEditable(int row, int column) { return false; } 
+			@Override 
+			public boolean isCellEditable(int row, int column) { return false; } 
 		};
 		
 		JTable infoTable = new JTable(infoModel);
@@ -71,7 +72,8 @@ public class ViewRecordFrame extends JFrame {
 		// --- 2. HR Profile ---
 		List<ClientHrProfile> profiles = new ClientHrProfileDAO().getByReferenceCode(refCode);
 		DefaultTableModel hrModel = new DefaultTableModel(new String[]{"Technical Skills", "Community Service"}, 0) {
-			@Override public boolean isCellEditable(int row, int column) { return false; } 
+			@Override 
+			public boolean isCellEditable(int row, int column) { return false; } 
 		};
 		for (ClientHrProfile p : profiles) hrModel.addRow(new Object[]{p.getTechnicalSkills(), p.getCommunityService()});
 		
@@ -82,7 +84,8 @@ public class ViewRecordFrame extends JFrame {
 		// --- 3. Relationships ---
 		List<ClientRelationship> relatives = new ClientRelationshipDAO().getByReferenceCode(refCode);
 		DefaultTableModel relModel = new DefaultTableModel(new String[]{"Name", "Relationship", "Age", "Working Status", "Occupation", "Income"}, 0) {
-			@Override public boolean isCellEditable(int row, int column) { return false; }
+			@Override 
+			public boolean isCellEditable(int row, int column) { return false; }
 		};
 		for (ClientRelationship r : relatives) relModel.addRow(new Object[]{r.getRelativeName(), r.getRelationship(), r.getRelativeAge(), r.getWorkingStatus(), r.getOccupation(), r.getIncome()});
 		

@@ -10,22 +10,24 @@ public class Main {
         
         // Test the database connection first
         Connection conn = DBConnection.connect();
-        if (conn != null) {
-            System.out.println("aye gng it's running good job");
-        } else {
-            System.out.println("hey gng database is dead did you do sudo systemctl enable --now mysql??? DO IT NOW");
-        }
         
-        // Launch the Main Menu
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-             try {
-                    MainMenuFrame frame = new MainMenuFrame();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (conn != null) {
+            System.out.println("database connection good");
+            
+            // Launch the Main Menu only if connection is successful
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                 try {
+                        MainMenuFrame frame = new MainMenuFrame();
+                        frame.setVisible(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+            
+        } else {
+            System.out.println("run sudo systemctl enable --now mysqld on your terminal first");        
+        }
     }
 }

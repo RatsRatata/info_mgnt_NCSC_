@@ -1,3 +1,5 @@
+//Getters and setters for the table client_hr_profile.
+
 package model;
 
 public class ClientHrProfile {

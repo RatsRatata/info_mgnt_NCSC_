@@ -132,7 +132,6 @@ public class DatabaseManagementFrame extends JFrame {
 			new RegistrationFrame(refCode).setVisible(true);
 		});
 		
-		// --- CLEANED UP DELETE ACTION LISTENER ---
 		btnDelete.addActionListener(e -> {
 			int tab = tabbedPane.getSelectedIndex();
 			JTable targetTable = tab == 0 ? clientInfoTable : (tab == 1 ? hrProfileTable : relationshipTable);

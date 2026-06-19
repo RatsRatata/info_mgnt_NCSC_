@@ -1,3 +1,5 @@
+//Getters and setters for the table client_relationship.
+
 package model;
 
 public class ClientRelationship {

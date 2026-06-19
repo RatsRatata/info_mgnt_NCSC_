@@ -1,3 +1,5 @@
+// This is for admin login.
+
 package dao;
 
 import java.sql.*;

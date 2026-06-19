@@ -62,7 +62,7 @@ public class RegistrationFrame extends JFrame {
 		contentContainer.setLayout(new BoxLayout(contentContainer, BoxLayout.Y_AXIS));
 		contentContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		// --- SECTION 1: PERSONAL INFORMATION ---
+		// Client Info
 		JPanel personalPanel = new JPanel(new GridLayout(10, 4, 10, 10)); 
 		personalPanel.setBorder(BorderFactory.createTitledBorder("Personal Information"));
 
@@ -80,7 +80,7 @@ public class RegistrationFrame extends JFrame {
 		personalPanel.add(new JLabel("GSIS/SSS Number:")); txtGsis = new JTextField(); personalPanel.add(txtGsis);
 		personalPanel.add(new JLabel("TIN Number:")); txtTin = new JTextField(); personalPanel.add(txtTin);
 		personalPanel.add(new JLabel("PhilHealth Number:")); txtPhilHealth = new JTextField(); personalPanel.add(txtPhilHealth);
-		personalPanel.add(new JLabel("* SC Association ID:")); txtScAssoc = new JTextField(); personalPanel.add(txtScAssoc);
+		personalPanel.add(new JLabel("* SC Assoc / OSCA ID:")); txtScAssoc = new JTextField(); personalPanel.add(txtScAssoc); // Updated Label
 		personalPanel.add(new JLabel("Other Gov ID:")); txtOtherGov = new JTextField(); personalPanel.add(txtOtherGov);
 		personalPanel.add(new JLabel("* Travel Capable?")); cbTravelCapability = new JComboBox<>(new String[]{"Yes", "No"}); personalPanel.add(cbTravelCapability);
 		personalPanel.add(new JLabel("* Highest Education:")); txtEducation = new JTextField(); personalPanel.add(txtEducation);
@@ -90,7 +90,7 @@ public class RegistrationFrame extends JFrame {
 		contentContainer.add(personalPanel);
 		contentContainer.add(Box.createRigidArea(new Dimension(0, 10))); 
 
-		// --- SECTION 2: HR PROFILE ---
+		// HR Profile
 		JPanel hrPanel = new JPanel(new GridLayout(1, 4, 10, 10));
 		hrPanel.setBorder(BorderFactory.createTitledBorder("HR Profile"));
 		hrPanel.add(new JLabel("Technical Skills:")); txtTechSkills = new JTextField(); hrPanel.add(txtTechSkills);
@@ -99,7 +99,7 @@ public class RegistrationFrame extends JFrame {
 		contentContainer.add(hrPanel);
 		contentContainer.add(Box.createRigidArea(new Dimension(0, 10))); 
 
-		// --- SECTION 3: RELATIVES ---
+		// Relationships
 		JPanel relativesPanel = new JPanel(new BorderLayout(5, 5));
 		relativesPanel.setBorder(BorderFactory.createTitledBorder("Family & Relatives"));
 		
@@ -134,7 +134,7 @@ public class RegistrationFrame extends JFrame {
 		mainScroll.setBorder(null);
 		mainPanel.add(mainScroll, BorderLayout.CENTER);
 
-		// --- BOTTOM BUTTONS ---
+		// Buttons
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
 		JButton btnCancel = new JButton("Cancel");
 		btnSave = new JButton("Save Record");
@@ -145,10 +145,7 @@ public class RegistrationFrame extends JFrame {
 		btnCancel.addActionListener(e -> dispose()); 
 		
 		btnAddRelative.addActionListener(e -> {
-			if(txtRelName.getText().trim().isEmpty() || txtRelRelationship.getText().trim().isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Relative Name and Relationship are required!");
-				return;
-			}
+
 			relTableModel.addRow(new Object[]{
 				txtRelName.getText().trim(), txtRelRelationship.getText().trim(),
 				txtRelAge.getText().trim(), cbRelWorking.getSelectedItem(),
@@ -190,7 +187,7 @@ public class RegistrationFrame extends JFrame {
 			txtGsis.setText(client.getGsisSssNumber() == null ? "" : client.getGsisSssNumber());
 			txtTin.setText(client.getTinNum() == null ? "" : client.getTinNum());
 			txtPhilHealth.setText(client.getPhilhealthNum() == null ? "" : client.getPhilhealthNum());
-			txtScAssoc.setText(client.getScAssociationId() == null ? "" : client.getScAssociationId());
+			txtScAssoc.setText(client.getScAssociationId() == null ? "" : client.getScAssociationId()); // Also handles OSCA ID visually
 			txtOtherGov.setText(client.getOtherGovId() == null ? "" : client.getOtherGovId());
 			txtEducation.setText(client.getHighestEducationalAttainment());
 			txtJob.setText(client.getJob() == null ? "" : client.getJob());
@@ -216,6 +213,7 @@ public class RegistrationFrame extends JFrame {
 	}
 
 	private void saveClientRecord() {
+
 		if (txtName.getText().trim().isEmpty() || txtAddress.getText().trim().isEmpty() || 
 			txtBirthDate.getText().trim().isEmpty() || txtBirthPlace.getText().trim().isEmpty() || 
 			txtEthnicity.getText().trim().isEmpty() || txtLanguage.getText().trim().isEmpty() || 
@@ -224,16 +222,77 @@ public class RegistrationFrame extends JFrame {
 			return;
 		}
 
+		if (txtName.getText().trim().length() > 50) {
+	        JOptionPane.showMessageDialog(this, "Name cannot exceed 50 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtAddress.getText().trim().length() > 50) {
+	        JOptionPane.showMessageDialog(this, "Address cannot exceed 50 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtBirthPlace.getText().trim().length() > 50) {
+	        JOptionPane.showMessageDialog(this, "Birth Place cannot exceed 50 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtContact.getText().trim().length() > 15) {
+	        JOptionPane.showMessageDialog(this, "Contact Number cannot exceed 15 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtEmail.getText().trim().length() > 50) {
+	        JOptionPane.showMessageDialog(this, "Email cannot exceed 50 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtReligion.getText().trim().length() > 15) {
+	        JOptionPane.showMessageDialog(this, "Religion cannot exceed 15 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtEthnicity.getText().trim().length() > 15) {
+	        JOptionPane.showMessageDialog(this, "Ethnicity cannot exceed 15 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtLanguage.getText().trim().length() > 15) {
+	        JOptionPane.showMessageDialog(this, "Language Spoken cannot exceed 15 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtScAssoc.getText().trim().length() > 15) {
+	        JOptionPane.showMessageDialog(this, "SC Assoc / OSCA ID cannot exceed 15 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtGsis.getText().trim().length() > 18) {
+	        JOptionPane.showMessageDialog(this, "GSIS/SSS Number cannot exceed 18 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtTin.getText().trim().length() > 17) {
+	        JOptionPane.showMessageDialog(this, "TIN Number cannot exceed 17 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtPhilHealth.getText().trim().length() > 14) {
+	        JOptionPane.showMessageDialog(this, "PhilHealth Number cannot exceed 14 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtOtherGov.getText().trim().length() > 30) {
+	        JOptionPane.showMessageDialog(this, "Other Gov ID cannot exceed 30 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtJob.getText().trim().length() > 20) {
+	        JOptionPane.showMessageDialog(this, "Job cannot exceed 20 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtPension.getText().trim().length() > 10) {
+	        JOptionPane.showMessageDialog(this, "Pension cannot exceed 10 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    if (txtEducation.getText().trim().length() > 20) {
+	        JOptionPane.showMessageDialog(this, "Education cannot exceed 20 characters.", "Length Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+	    
 		try {
 			ClientInfo newClient = new ClientInfo();
 			ClientInfoDAO dao = new ClientInfoDAO(); 
 
 			if (isEditMode) {
-				ClientInfo existingClient = dao.getByReferenceCode(currentRefCode);
-				if (existingClient != null) newClient.setOscaIdNum(existingClient.getOscaIdNum());
 				newClient.setReferenceCode(currentRefCode);
-			} else {
-				newClient.setOscaIdNum(null); 
 			}
 
 			newClient.setName(txtName.getText().trim());
@@ -255,16 +314,19 @@ public class RegistrationFrame extends JFrame {
 			String travelFull = (String) cbTravelCapability.getSelectedItem();
 			newClient.setTravelCapability(travelFull.substring(0, 1)); 
 
-			// --- CLEANED UP MAPPING USING HELPER METHOD ---
 			newClient.setContactNumber(getVal(txtContact));
 			newClient.setEmailAddress(getVal(txtEmail));
 			newClient.setReligion(getVal(txtReligion));
 			newClient.setEthnicity(txtEthnicity.getText().trim());
 			newClient.setLanguageSpoken(txtLanguage.getText().trim());
+			
+			String sharedId = txtScAssoc.getText().trim();
+			newClient.setScAssociationId(sharedId);
+			newClient.setOscaIdNum(sharedId);
+			
 			newClient.setGsisSssNumber(getVal(txtGsis));
 			newClient.setTinNum(getVal(txtTin));
 			newClient.setPhilhealthNum(getVal(txtPhilHealth));
-			newClient.setScAssociationId(txtScAssoc.getText().trim());
 			newClient.setOtherGovId(getVal(txtOtherGov));
 			newClient.setJob(getVal(txtJob));
 			newClient.setHighestEducationalAttainment(txtEducation.getText().trim());
@@ -312,12 +374,19 @@ public class RegistrationFrame extends JFrame {
 					relDao.insert(relative);
 				}
 
-				JOptionPane.showMessageDialog(this, isEditMode ? "Record updated!" : "New client registered!", "Success", JOptionPane.INFORMATION_MESSAGE);
+				String msg;
+				if (isEditMode) {
+					msg = "Record successfully updated!\nReference Code: " + savedRefCode;
+				} else {
+					msg = "New client successfully registered!\nReference Code: " + savedRefCode + "\n\nPlease write this down or provide it to the client.";
+				}
+				
+				JOptionPane.showMessageDialog(this, msg, "Success", JOptionPane.INFORMATION_MESSAGE);
 				dispose(); 
 			} else {
 				JOptionPane.showMessageDialog(this, "Failed to save to database.", "Database Error", JOptionPane.ERROR_MESSAGE);
 			}
-
+			
 		} catch (IllegalArgumentException ex) {
 			JOptionPane.showMessageDialog(this, "Please check your date format (YYYY-MM-DD).", "Format Error", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception ex) {
@@ -326,7 +395,6 @@ public class RegistrationFrame extends JFrame {
 		}
 	}
 	
-	// --- HELPER METHOD TO KEEP CODE CLEAN ---
 	private String getVal(JTextField field) {
 		String text = field.getText().trim();
 		return text.isEmpty() ? null : text;

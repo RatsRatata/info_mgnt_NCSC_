@@ -7,6 +7,8 @@ import java.util.List;
 
 public class ClientInfoDAO {
 	
+	// Data Mapper, holds the data when giving out read instructions. This solely exists so we don't 
+	// have to write 22 attribute names for every CRUD operation.
 	private ClientInfo mapRow(ResultSet rs) throws SQLException {
 	    ClientInfo client = new ClientInfo();
 	    client.setReferenceCode(rs.getString("reference_code"));
@@ -34,6 +36,8 @@ public class ClientInfoDAO {
 	    return client;
 	}
 	
+	// Reverse of mapRow. Used for creation, deletion, and updating of data. This solely exists so we don't
+	// have to write 21 attribute names for every CRUD operation.
 	private void setStatementParameters(PreparedStatement stmt, ClientInfo client, boolean isUpdate) throws SQLException {
 	    int index = 1;
 	    if (!isUpdate) stmt.setString(index++, client.getReferenceCode());
@@ -63,7 +67,7 @@ public class ClientInfoDAO {
 	    if (isUpdate) stmt.setString(index++, client.getReferenceCode());
 	}
 
-	// --- UNIVERSAL ID GENERATOR ---
+	// Reference Code Generator. SQL can't auto increment an attribute that isn't a number.
 	private String generateNextId(String columnName, String prefix) {
 		String nextCode = prefix + "001"; 
 		String sql = "SELECT " + columnName + " FROM client_info WHERE " + columnName + " LIKE ? ORDER BY " + columnName + " DESC LIMIT 1";
@@ -89,6 +93,30 @@ public class ClientInfoDAO {
 		return nextCode;
 	}
 	
+	// CRUD OPERATIONS
+	
+	// Create or Insert Operation
+	public boolean insert(ClientInfo client) {
+		int currentYear = java.time.Year.now().getValue();
+		client.setReferenceCode(generateNextId("reference_code", "REF-" + currentYear + "-"));
+
+	    String sql = "INSERT INTO client_info (reference_code, name, address, birth_date, birth_place, "
+	               + "marital_status, sex, contact_number, email_address, religion, ethnicity, "
+	               + "language_spoken, osca_id_num, gsis_sss_number, tin_num, philhealth_num, "
+	               + "sc_association_id, other_gov_id, travel_capability, job, current_pension, "
+	               + "highest_educational_attainment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	               
+	    try (Connection conn = DBConnection.connect();
+	        PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        setStatementParameters(stmt, client, false);
+	        return stmt.executeUpdate() > 0;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+	
+	// Get all or Read Operation
 	public List<ClientInfo> getAll() {
 	    List<ClientInfo> list = new ArrayList<>();
 	    String sql = "SELECT * FROM client_info";
@@ -100,10 +128,11 @@ public class ClientInfoDAO {
 	    return list;
 	}
 	
+	// Get by Reference Code
 	public ClientInfo getByReferenceCode(String referenceCode) {
 	    String sql = "SELECT * FROM client_info WHERE reference_code = ?";
 	    try (Connection conn = DBConnection.connect();
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        PreparedStatement stmt = conn.prepareStatement(sql)) {
 	        stmt.setString(1, referenceCode);
 	        ResultSet rs = stmt.executeQuery();
 	        if (rs.next()) return mapRow(rs);
@@ -111,27 +140,7 @@ public class ClientInfoDAO {
 	    return null;
 	}
 	
-	public boolean insert(ClientInfo client) {
-		int currentYear = java.time.Year.now().getValue();
-		client.setReferenceCode(generateNextId("reference_code", "REF-" + currentYear + "-"));
-		client.setOscaIdNum(generateNextId("osca_id_num", "OSCA-"));
-
-	    String sql = "INSERT INTO client_info (reference_code, name, address, birth_date, birth_place, "
-	               + "marital_status, sex, contact_number, email_address, religion, ethnicity, "
-	               + "language_spoken, osca_id_num, gsis_sss_number, tin_num, philhealth_num, "
-	               + "sc_association_id, other_gov_id, travel_capability, job, current_pension, "
-	               + "highest_educational_attainment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	               
-	    try (Connection conn = DBConnection.connect();
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
-	        setStatementParameters(stmt, client, false);
-	        return stmt.executeUpdate() > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-	}
-
+	// Update Operation
 	public boolean update(ClientInfo client) {
 	    String sql = "UPDATE client_info SET name = ?, address = ?, birth_date = ?, birth_place = ?, "
 	               + "marital_status = ?, sex = ?, contact_number = ?, email_address = ?, religion = ?, "
@@ -141,7 +150,7 @@ public class ClientInfoDAO {
 	               + "WHERE reference_code = ?";
 	               
 	    try (Connection conn = DBConnection.connect();
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        PreparedStatement stmt = conn.prepareStatement(sql)) {
 	        setStatementParameters(stmt, client, true);
 	        return stmt.executeUpdate() > 0;
 	    } catch (SQLException e) {
@@ -149,11 +158,12 @@ public class ClientInfoDAO {
 	        return false;
 	    }
 	}
-
+	
+	// Delete Operation
 	public boolean delete(String referenceCode) {
 	    String sql = "DELETE FROM client_info WHERE reference_code = ?";
 	    try (Connection conn = DBConnection.connect();
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        PreparedStatement stmt = conn.prepareStatement(sql)) {
 	        stmt.setString(1, referenceCode);
 	        return stmt.executeUpdate() > 0;
 	    } catch (SQLException e) {

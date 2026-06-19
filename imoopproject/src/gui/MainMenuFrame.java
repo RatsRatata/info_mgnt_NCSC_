@@ -18,7 +18,7 @@ public class MainMenuFrame extends JFrame {
 	private JPanel contentPane;
 
 	public MainMenuFrame() {
-		setTitle("NCSC - Public Portal");
+		setTitle("NCSC Application Form");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		setBounds(100, 100, 500, 350);
 		setLocationRelativeTo(null);

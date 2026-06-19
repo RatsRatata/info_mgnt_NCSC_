@@ -1,3 +1,5 @@
+// This simply exists to make the tables look better.
+
 package gui;
 
 import javax.swing.JTable;
@@ -5,8 +7,6 @@ import javax.swing.JTable;
 public class UIUtils {
 	
 	public static void applyModernTableStyle(JTable table) {
-		
-		// This exists to simply make the tables look better
 		
 		table.setRowHeight(35);
 		table.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 14));
